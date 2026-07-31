@@ -1,0 +1,41 @@
+package config
+
+import (
+	"log"
+	"os"
+	"sync"
+
+	"github.com/joho/godotenv"
+)
+
+type (
+	Config struct {
+		Bot Bot
+	}
+
+	Bot struct {
+		Token string
+	}
+)
+
+var (
+	configInstance *Config
+	once sync.Once
+)
+
+func Load() *Config {
+	once.Do(func() {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
+
+		configInstance = &Config{
+			Bot: Bot{
+				Token: os.Getenv("BOT_TOKEN"),
+			},
+		}
+	})
+
+	return configInstance
+}
