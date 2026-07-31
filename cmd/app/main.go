@@ -2,10 +2,10 @@ package main
 
 import (
 	"SendAsGhost/internal/config"
-	"log"
+	"SendAsGhost/internal/infrastructure/poller"
 )
 
 func main() {
 	conf := config.Load()
-	log.Println(conf.Bot.Token)
+	poller.NewPoller(conf).Start()
 }

@@ -11,6 +11,7 @@ import (
 type (
 	Config struct {
 		Bot Bot
+		Proxy string
 	}
 
 	Bot struct {
@@ -34,6 +35,7 @@ func Load() *Config {
 			Bot: Bot{
 				Token: os.Getenv("BOT_TOKEN"),
 			},
+			Proxy: os.Getenv("BOT_TOKEN"),
 		}
 	})
 
