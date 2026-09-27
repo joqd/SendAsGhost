@@ -35,7 +35,7 @@ func Load() *Config {
 			Bot: Bot{
 				Token: os.Getenv("BOT_TOKEN"),
 			},
-			Proxy: os.Getenv("BOT_TOKEN"),
+			Proxy: os.Getenv("PROXY"),
 		}
 	})
 

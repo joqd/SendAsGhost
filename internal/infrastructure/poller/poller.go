@@ -2,6 +2,7 @@ package poller
 
 import (
 	"SendAsGhost/internal/config"
+	"SendAsGhost/internal/handlers"
 	"log"
 	"net"
 	"net/http"
@@ -25,7 +26,7 @@ func NewPoller(conf *config.Config) *Poller {
 	if conf.Proxy != "" {
 		log.Println("Parsing proxy")
 
-		proxyURL, err := url.Parse("http://127.0.0.1:10808")
+		proxyURL, err := url.Parse(conf.Proxy)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -56,6 +57,9 @@ func NewPoller(conf *config.Config) *Poller {
 }
 
 func (p *Poller) Start() {
+	log.Println("Register routes...")
+	handlers.RegisterRoutes(p.bot)
+
 	log.Println("Polling...")
 	p.bot.Start()
 }
