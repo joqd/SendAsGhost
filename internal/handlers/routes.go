@@ -1,9 +1,7 @@
 package handlers
 
-import "gopkg.in/telebot.v4"
+import tele "gopkg.in/telebot.v4"
 
-
-
-func RegisterRoutes(b *telebot.Bot) {
-	b.Handle("/ping", pingHandler)
+func (h *Handler) Register(bot *tele.Bot) {
+	bot.Handle("/ping", h.Ping)
 }
