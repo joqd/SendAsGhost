@@ -10,8 +10,13 @@ import (
 
 type (
 	Config struct {
+		DB DB
 		Bot Bot
 		Proxy string
+	}
+
+	DB struct {
+		URI string
 	}
 
 	Bot struct {
@@ -32,6 +37,9 @@ func Load() *Config {
 		}
 
 		configInstance = &Config{
+			DB: DB{
+				URI: os.Getenv("PG_URI"),
+			},
 			Bot: Bot{
 				Token: os.Getenv("BOT_TOKEN"),
 			},
