@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -26,20 +27,29 @@ func run() error {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	pool, err := db.NewPostgres(ctx, conf.DB.URI)
+	// Connecting to Postgres
+	pg := conf.Postgres
+	uri := fmt.Sprintf(
+		"postgres://%s:%s@%s:%d/%s?sslmode=disable",
+		pg.User, pg.Password, pg.Host, pg.Port, pg.DB,
+	)
+	pool, err := db.NewPostgres(ctx, uri)
 	if err != nil {
 		return err
 	}
 	defer pool.Close()
 
+	// Setup handlers/middlewares
 	bot, err := telegram.NewBot(conf)
 	if err != nil {
 		return err
 	}
 
 	middlewares.Register(bot, pool)
-	handlers.New(pool).Register(bot)
+	handlers.New(ctx, pool).Register(bot)
 
+
+	// Polling
 	go func() {
 		<-ctx.Done()
 		bot.Stop()
